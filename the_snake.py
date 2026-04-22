@@ -8,6 +8,9 @@ SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 GRID_SIZE = 20
 
+GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
+GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
 APPLE_COLOR = (255, 0, 0)
@@ -19,27 +22,33 @@ RIGHT = (GRID_SIZE, 0)
 
 FPS = 10
 
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
 
 class GameObject:
     """Базовый класс игровых объектов."""
 
     def __init__(self):
-        """Инициализация позиции объекта."""
+        """Инициализация объекта."""
         self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         self.body_color = None
 
     def draw(self, surface):
-        """Метод отрисовки (переопределяется)."""
+        """Метод отрисовки."""
         pass
 
 
 class Apple(GameObject):
     """Класс яблока."""
 
-    def __init__(self, snake_positions):
+    def __init__(self, snake_positions=None):
         """Создание яблока."""
         super().__init__()
         self.body_color = APPLE_COLOR
+        if snake_positions is None:
+            snake_positions = []
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
@@ -136,11 +145,7 @@ def handle_keys(snake):
 
 def main():
     """Основной цикл игры."""
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption('Змейка')
-
-    clock = pygame.time.Clock()
 
     snake = Snake()
     apple = Apple(snake.positions)
